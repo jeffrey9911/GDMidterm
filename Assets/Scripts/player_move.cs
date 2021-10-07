@@ -10,10 +10,12 @@ public class player_move : MonoBehaviour
     public Animator _animator;
     public float _gravity = -9.8f;
     public float dtMultiplier = 1.0f;
+    public float _jumpForce = 0.5f;
 
 // prtV
     private RaycastHit rayCout;
     private float veloY;
+    private int rotAng;
 
     // Start is called before the first frame update
     void Start()
@@ -28,35 +30,22 @@ public class player_move : MonoBehaviour
         
     }
 
-    void FixedUpdate()
+    private void FixedUpdate()
     {
         calcVeloY(false);
         isCollidingVertically(false);
+        calcRotAng(false);
 
-        float veloX = Input.GetAxis("Horizontal");
-        float veloZ = Input.GetAxis("Vertical");
-        Vector3 veloInput = new Vector3(veloX, 0, veloZ);
-        veloInput = Quaternion.Euler(0, Camera.main.transform.rotation.eulerAngles.y, 0) * veloInput;
+        _animator.SetInteger("AnimatorState", rotAng);
+        if(rotAng != -1)
+            _gameObj.transform.rotation = Quaternion.Euler(0, Camera.main.transform.rotation.eulerAngles.y + rotAng, 0);
 
-        _animator.SetInteger("AnimatorState", 0);
-
-        if (Input.GetKey(KeyCode.W))
-        {
-            _animator.SetInteger("AnimatorState", 1);
-            _animator.SetFloat("isMovingForward", 1.0f);
-            _gameObj.transform.rotation = Quaternion.Euler(0, Camera.main.transform.rotation.eulerAngles.y, 0);
-            
-        } 
-        if(Input.GetKey(KeyCode.S))
-        {
-            _animator.SetInteger("AnimatorState", 1);
-            _animator.SetFloat("isMovingForward", -1.0f);
-            _gameObj.transform.rotation = Quaternion.Euler(0, Camera.main.transform.rotation.eulerAngles.y, 0);
-        }
         if (Input.GetKey(KeyCode.Space) && isCollidingVertically(false))
         {
-            veloY += 0.5f;
+            veloY += _jumpForce;
         }
+
+        
 
         _gameObj.transform.position += new Vector3(0f, veloY, 0f) * Time.deltaTime * dtMultiplier;
     }
@@ -84,5 +73,36 @@ public class player_move : MonoBehaviour
         veloY -= (veloY <= _gravity) ? 0 : Time.deltaTime;
         if (isDebugging)
             Debug.Log("veloY: " + veloY);
+    }
+
+    void calcRotAng(bool isDebugging)
+    {
+        rotAng = -1;
+
+        if (Input.GetKey(KeyCode.A))
+            rotAng = 270;
+        if (Input.GetKey(KeyCode.D))
+            rotAng = 90;
+
+        if (Input.GetKey(KeyCode.W))
+        {
+            rotAng = 0;
+            rotAng += (Input.GetKey(KeyCode.D)) ? 45 : 0;
+            rotAng += (Input.GetKey(KeyCode.A)) ? -45 : 0;
+        }
+        if(Input.GetKey(KeyCode.S))
+        {
+            rotAng = 180;
+            rotAng += (Input.GetKey(KeyCode.D)) ? -45 : 0;
+            rotAng += (Input.GetKey(KeyCode.A)) ? 45 : 0;
+        }
+
+        if (Input.GetKey(KeyCode.D) && Input.GetKey(KeyCode.A))
+            rotAng = 0;
+        if (Input.GetKey(KeyCode.W) && Input.GetKey(KeyCode.S))
+            rotAng = 0;
+
+        if (isDebugging)
+            Debug.Log("rotAng: " + rotAng);
     }
 }
