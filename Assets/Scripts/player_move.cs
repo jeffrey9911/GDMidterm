@@ -33,12 +33,14 @@ public class player_move : MonoBehaviour
     private void FixedUpdate()
     {
         calcVeloY(false);
-        isCollidingVertically(false);
+        isCollidingVertically(true);
         calcRotAng(false);
 
         _animator.SetInteger("AnimatorState", rotAng);
-        if(rotAng != -1)
+        if (rotAng != -1)
+        {
             _gameObj.transform.rotation = Quaternion.Euler(0, Camera.main.transform.rotation.eulerAngles.y + rotAng, 0);
+        }
 
         if (Input.GetKey(KeyCode.Space) && isCollidingVertically(false))
         {
@@ -52,10 +54,10 @@ public class player_move : MonoBehaviour
 
     bool isCollidingVertically(bool isDebugging)
     {
-        if(isDebugging)
+        if (isDebugging)
             Debug.Log("rayCout.distance: " + rayCout.distance);
 
-        if(!Physics.Raycast(_gameObj.transform.position, Vector3.down, out rayCout))
+        if (!Physics.Raycast(_gameObj.transform.position, Vector3.down, out rayCout))
         {
             return false;
         }
@@ -65,6 +67,8 @@ public class player_move : MonoBehaviour
             veloY = 0f;
             return true;
         }
+
+
         return false;
     }
 

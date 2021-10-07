@@ -32,7 +32,7 @@ public class player_inter : MonoBehaviour
         {
             float transZ;
             float transX;
-            switch (isNearDoor(true))
+            switch (isNearDoor(false))
             {
                 
                 case 0:
