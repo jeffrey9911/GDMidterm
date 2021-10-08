@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class player_inter : MonoBehaviour
 {
@@ -11,31 +12,43 @@ public class player_inter : MonoBehaviour
     public GameObject _door3;
     public GameObject _door4;
     public GameObject _door5;
+    public GameObject f_inter;
+    public GameObject tut;
+    public GameObject num_Coin;
 
     private RaycastHit rayCout;
+    private bool tuts = true;
+    private bool keyFDown = false;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if (Input.GetKeyDown(KeyCode.F))
+            keyFDown = true;
     }
 
     private void FixedUpdate()
     {
-        if (Input.GetKey(KeyCode.F))
+        tut.SetActive(tuts);
+        f_inter.SetActive((tuts && isNearDoor(false) == 0));
+        num_Coin.SetActive(!tuts);
+      
+        if (keyFDown)
         {
+            keyFDown = false;
             float transZ;
             float transX;
             switch (isNearDoor(false))
             {
                 
                 case 0:
+                    tuts = false;
                     transZ = (_player.transform.position.z < midPoint(_door0, _door1).z) ? 2.0f : -2.0f;
                     _player.transform.position += new Vector3(0.0f, 0.0f, transZ);
                     break;
