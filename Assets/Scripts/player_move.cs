@@ -33,7 +33,7 @@ public class player_move : MonoBehaviour
     private void FixedUpdate()
     {
         calcVeloY(false);
-        isCollidingVertically(true);
+        isCollidingVertically(false);
         calcRotAng(false);
 
         _animator.SetInteger("AnimatorState", rotAng);
