@@ -58,7 +58,7 @@ public class coin_inter : MonoBehaviour
             coin[i].transform.rotation = Quaternion.Euler(0.0f, coinRotation() , 0.0f);
         }
 
-        isNearCoin(true);
+        isNearCoin(false);
 
         if (keyFDown)
         {
